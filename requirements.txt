@@ -1,9 +1,5 @@
-google-generativeai
-langchain
-langchain-google-genai
 streamlit
 python-dotenv
+langchain
+langchain-google-genai
 pdfplumber
-ipykernel
-
--e .
