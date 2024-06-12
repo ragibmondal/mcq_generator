@@ -87,10 +87,9 @@ def read_input_file(file_name):
 # Streamlit app
 def main():
     # Set the page configuration
-    st.set_page_config(page_title="MCQs Creator App",
-                       page_icon="💡",
+    st.set_page_config(page_icon="💡",
                        layout="wide",
-                       initial_sidebar_state="expanded")
+                       initial_sidebar_state="expanded"
 
     # Set the page title and styling
     st.markdown("""
