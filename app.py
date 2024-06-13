@@ -64,15 +64,6 @@ try:
             message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
 
-        # Word file download
-        word_placeholder = st.empty()
-        word_download = word_placeholder.download_button(
-            label="Download Word File",
-            data=response,
-            file_name="mcqs.docx",
-            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        )
-
         # PDF file download
         pdf_placeholder = st.empty()
         pdf_download = pdf_placeholder.download_button(
