@@ -8,4 +8,5 @@ pdfkit
 wkhtmltopdf
 ipykernel
 python-docx
+fpdf
 -e
