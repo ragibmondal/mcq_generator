@@ -36,7 +36,7 @@ with st.sidebar:
                              options=['Easy', 'Medium', 'Hard'])
 
     # Language selection
-    language = st.selectbox('Select Language', ['English', 'French', 'Spanish', 'German', 'Italian'])
+    language = st.selectbox('Select Language', ['English','Bangla','Hindi','Urdu','Arabic','French', 'Spanish', 'German', 'Italian'])
 
     if uploaded_file and number and level and language:
         data = read_input_file(uploaded_file)
