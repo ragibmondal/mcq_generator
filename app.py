@@ -39,8 +39,8 @@ with st.sidebar:
         data = read_input_file(uploaded_file)
         gen_button = st.button("Generate", key="gen_button")
 
-try:
-    if gen_button:
+if gen_button:
+    try:
         with st.spinner('Generating Multi Choice Questions...'):
             # Generating the response from the model
             response = llm_chain.run(number=number,
@@ -49,11 +49,9 @@ try:
                                      language=language)
             # print(response)
         logging.info('MCQ are generated')
-except NameError:
-    pass
-
-try:
-    if gen_button and response:
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+    else:
         # write to UI
         message_placeholder = st.empty()
         full_response = ""
@@ -71,9 +69,6 @@ try:
             file_name="mcqs.pdf",
             mime="application/pdf"
         )
-
-except NameError:
-    pass
 
 def create_pdf(response):
     pdf = FPDF()
