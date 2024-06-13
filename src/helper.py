@@ -17,7 +17,7 @@ logging.info(f'GOOGLE API KEY is {GOOGLE_API_KEY}')
 def create_llm_model():
     # Creating LLM model
     return ChatGoogleGenerativeAI(google_api_key=GOOGLE_API_KEY,
-                                    model="gemini-pro",
+                                    model="gemini-1.5-flash-latest",
                                     temperature=0.3,
                                     )
 llm_model = create_llm_model()
