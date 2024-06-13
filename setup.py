@@ -9,6 +9,6 @@ setup(
                       'langchain',
                       'streamlit',
                       'python-dotenv',
-                      'PyPDF2'],
+                      'pdfplumber'],
     packages=find_packages()
 )
