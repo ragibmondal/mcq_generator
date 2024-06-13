@@ -18,6 +18,14 @@ from src.logger import logging
 st.title(':red[MCQ] :blue[Generator]')
 st.caption('                By :orange[Gemini-Flash-1.5] using Langchain 🐦')
 
+def create_pdf(response):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, txt=response)
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
+    return pdf_bytes
+
 with st.sidebar:
     # uploading the input file
     uploaded_file = st.file_uploader("Choose a PDF | Text file",
@@ -69,11 +77,3 @@ if gen_button:
             file_name="mcqs.pdf",
             mime="application/pdf"
         )
-
-def create_pdf(response):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, txt=response)
-    pdf_bytes = pdf.output(dest="S").encode("latin-1")
-    return pdf_bytes
