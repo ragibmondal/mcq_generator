@@ -1,7 +1,6 @@
 import streamlit as st
 import time
 import pdfkit
-import base64
 import io
 from docx import Document
 from docx.shared import Inches
@@ -83,20 +82,19 @@ try:
         message_placeholder.markdown(full_response)
 
         # Word file download
-        word_placeholder = st.empty()
-        word_file = create_word_file(response, language)
-        word_download = word_placeholder.download_button(
+        word_data = create_word_file(response, language)
+        st.download_button(
             label="Download Word File",
-            data=word_file.getvalue(),
+            data=word_data,
             file_name="mcqs.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
 
         # PDF file download
-        pdf_placeholder = st.empty()
-        pdf_download = pdf_placeholder.download_button(
+        pdf_data = create_pdf(response)
+        st.download_button(
             label="Download PDF File",
-            data=create_pdf(response),
+            data=pdf_data,
             file_name="mcqs.pdf",
             mime="application/pdf"
         )
@@ -125,7 +123,7 @@ def create_word_file(response, language):
     doc.save(file_obj)
     file_obj.seek(0)
 
-    return file_obj
+    return file_obj.getvalue()
 
 def create_pdf(response):
     pdf = pdfkit.from_string(response, False)
