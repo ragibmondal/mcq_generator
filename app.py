@@ -22,8 +22,24 @@ def create_pdf(response):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
-    pdf.multi_cell(0, 10, txt=response)
-    pdf_bytes = pdf.output(dest="S").encode("utf-8")  # Change from "latin-1" to "utf-8"
+
+    # Split the response into chunks that can be safely encoded with Latin-1
+    chunks = []
+    current_chunk = ""
+    for char in response:
+        try:
+            current_chunk += char
+            current_chunk.encode("latin-1")  # Test if the chunk can be encoded
+        except UnicodeEncodeError:
+            chunks.append(current_chunk)
+            current_chunk = char
+    chunks.append(current_chunk)
+
+    # Add the chunks to the PDF
+    for chunk in chunks:
+        pdf.multi_cell(0, 10, txt=chunk)
+
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
     return pdf_bytes
 
 # Initialize gen_button to False
