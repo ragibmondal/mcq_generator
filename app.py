@@ -43,9 +43,9 @@ with st.sidebar:
     # Language selection
     language = st.selectbox('Select Language', ['English', 'Bangla', 'Hindi', 'Urdu', 'French', 'Spanish', 'German', 'Italian'])
 
-    if uploaded_file and number and level and language:
-        data = read_input_file(uploaded_file)
-        gen_button = st.button("Generate", key="gen_button")
+if uploaded_file and number and level and language:
+    data = read_input_file(uploaded_file)
+    gen_button = st.button("Generate", key="gen_button")
 
 if gen_button:
     try:
