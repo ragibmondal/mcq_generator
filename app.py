@@ -26,6 +26,9 @@ def create_pdf(response):
     pdf_bytes = pdf.output(dest="S").encode("latin-1")
     return pdf_bytes
 
+# Initialize gen_button to False
+gen_button = False
+
 with st.sidebar:
     # uploading the input file
     uploaded_file = st.file_uploader("Choose a PDF | Text file",
@@ -43,9 +46,10 @@ with st.sidebar:
     # Language selection
     language = st.selectbox('Select Language', ['English', 'Bangla', 'Hindi', 'Urdu', 'French', 'Spanish', 'German', 'Italian'])
 
-if uploaded_file and number and level and language:
-    data = read_input_file(uploaded_file)
-    gen_button = st.button("Generate", key="gen_button")
+    # Update gen_button based on the conditions
+    if uploaded_file and number and level and language:
+        data = read_input_file(uploaded_file)
+        gen_button = st.button("Generate", key="gen_button")
 
 if gen_button:
     try:
