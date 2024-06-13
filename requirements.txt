@@ -7,4 +7,5 @@ pdfplumber
 pdfkit
 wkhtmltopdf
 ipykernel
+python-docx
 -e
