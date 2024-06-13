@@ -1,7 +1,7 @@
 from langchain.prompts import PromptTemplate
 
 Template = '''\
-You are an expert in the creation of multi choice questions. \
+You are an expert in the creation of multi choice questions in {language}. \
 Your job is create a {number} number of multi choice questions in {difficulty} level. \
 Make the quiz to test the cognitive and analytical abilities of a user. \
 Make sure the questions are not repeated and answer should be small and follow the below format for creating questions: \n
@@ -16,6 +16,6 @@ Using following text to generate muti choice questions based on above instructio
 '''
 
 mcq_prompt = PromptTemplate(
-    input_variables=['number','difficulty','text'],
+    input_variables=['number', 'difficulty', 'text', 'language'],
     template=Template
 )
