@@ -1,8 +1,8 @@
 import streamlit as st
 import time
-import pdfkit
 import base64
 import io
+from fpdf import FPDF
 
 # Set the page configuration
 st.set_page_config(page_title="MCQs Generator App",
@@ -10,7 +10,6 @@ st.set_page_config(page_title="MCQs Generator App",
                    layout="centered",
                    initial_sidebar_state="auto",
                    )
-
 from src.helper import llm_chain
 from src.data_util import read_input_file
 from src.logger import logging
@@ -25,7 +24,6 @@ with st.sidebar:
                                      accept_multiple_files=False,
                                      type=['txt', 'pdf']
                                      )
-
     # Number of mcq questions user wants
     number = st.number_input("Insert a number",
                              min_value=1,
@@ -34,9 +32,8 @@ with st.sidebar:
     # Difficulty level slider
     level = st.select_slider('Select difficulty',
                              options=['Easy', 'Medium', 'Hard'])
-
     # Language selection
-    language = st.selectbox('Select Language', ['English','Bangla','Hindi','Urdu','French', 'Spanish', 'German', 'Italian'])
+    language = st.selectbox('Select Language', ['English', 'Bangla', 'Hindi', 'Urdu', 'French', 'Spanish', 'German', 'Italian'])
 
     if uploaded_file and number and level and language:
         data = read_input_file(uploaded_file)
@@ -89,5 +86,9 @@ except NameError:
     pass
 
 def create_pdf(response):
-    pdf = pdfkit.from_string(response, False)
-    return pdf
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    pdf.multi_cell(0, 10, txt=response)
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
+    return pdf_bytes
