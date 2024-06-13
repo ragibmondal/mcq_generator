@@ -1,11 +1,16 @@
 import streamlit as st
 import time
+import pdfkit
+import base64
+import io
+
 # Set the page configuration
-st.set_page_config(page_title="MCQs Geberator App", 
-                   page_icon="🧐", 
-                   layout="centered", 
-                   initial_sidebar_state="auto", 
+st.set_page_config(page_title="MCQs Generator App",
+                   page_icon="🧐",
+                   layout="centered",
+                   initial_sidebar_state="auto",
                    )
+
 from src.helper import llm_chain
 from src.data_util import read_input_file
 from src.logger import logging
@@ -16,22 +21,24 @@ st.caption('                By :orange[Gemini-Flash-1.5] using Langchain 🐦')
 
 with st.sidebar:
     # uploading the input file
-    uploaded_file = st.file_uploader("Choose a PDF | Text file", 
-                                    accept_multiple_files=False,
-                                    type=['txt','pdf']
-                                    )
-    
-    # Number of mcq questions user wants
-    number = st.number_input("Insert a number", 
-                             min_value= 1,
-                             max_value= 100,
-                            value=5, placeholder="Type a number...")
+    uploaded_file = st.file_uploader("Choose a PDF | Text file",
+                                     accept_multiple_files=False,
+                                     type=['txt', 'pdf']
+                                     )
 
+    # Number of mcq questions user wants
+    number = st.number_input("Insert a number",
+                             min_value=1,
+                             max_value=100,
+                             value=5, placeholder="Type a number...")
     # Difficulty level slider
     level = st.select_slider('Select difficulty',
-                            options=['Easy', 'Medium', 'Hard'])
+                             options=['Easy', 'Medium', 'Hard'])
 
-    if uploaded_file and number and level:
+    # Language selection
+    language = st.selectbox('Select Language', ['English', 'French', 'Spanish', 'German', 'Italian'])
+
+    if uploaded_file and number and level and language:
         data = read_input_file(uploaded_file)
         gen_button = st.button("Generate", key="gen_button")
 
@@ -39,24 +46,48 @@ try:
     if gen_button:
         with st.spinner('Generating Multi Choice Questions...'):
             # Generating the response from the model
-            response = llm_chain.run(number = number,
-                                    difficulty = level,
-                                    text = data)
+            response = llm_chain.run(number=number,
+                                     difficulty=level,
+                                     text=data,
+                                     language=language)
             # print(response)
         logging.info('MCQ are generated')
 except NameError:
     pass
+
 try:
     if gen_button and response:
         # write to UI
         message_placeholder = st.empty()
         full_response = ""
-        for chunk in response.replace('\n','  \n').replace('\t','----'):
+        for chunk in response.replace('\n', '  \n').replace('\t', '----'):
             full_response += chunk
             time.sleep(0.005)
             # Add a blinking cursor to simulate typing
             message_placeholder.markdown(full_response + "▌")
         message_placeholder.markdown(full_response)
-        # st.markdown(response)
+
+        # Word file download
+        word_placeholder = st.empty()
+        word_download = word_placeholder.download_button(
+            label="Download Word File",
+            data=response,
+            file_name="mcqs.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
+
+        # PDF file download
+        pdf_placeholder = st.empty()
+        pdf_download = pdf_placeholder.download_button(
+            label="Download PDF File",
+            data=create_pdf(response),
+            file_name="mcqs.pdf",
+            mime="application/pdf"
+        )
+
 except NameError:
     pass
+
+def create_pdf(response):
+    pdf = pdfkit.from_string(response, False)
+    return pdf
