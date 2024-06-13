@@ -3,6 +3,21 @@ import time
 import pdfkit
 import base64
 import io
+from docx import Document
+from docx.shared import Inches
+from docx.enum.text import WD_BREAK
+
+# Define a dictionary mapping languages to font names
+LANGUAGE_FONTS = {
+    'English': 'Arial',
+    'French': 'Times New Roman',
+    'Spanish': 'Calibri',
+    'German': 'Verdana',
+    'Italian': 'Cambria',
+    'Bangla': 'SolaimanLipi',
+    'Hindi': 'Mangal',
+    'Urdu': 'Jameel Noori Nastaleeq',
+}
 
 # Set the page configuration
 st.set_page_config(page_title="MCQs Generator App",
@@ -36,7 +51,7 @@ with st.sidebar:
                              options=['Easy', 'Medium', 'Hard'])
 
     # Language selection
-    language = st.selectbox('Select Language', ['English','Bangla','Hindi','Urdu','Arabic','French', 'Spanish', 'German', 'Italian'])
+    language = st.selectbox('Select Language', ['English', 'French', 'Spanish', 'German', 'Italian', 'Bangla', 'Hindi', 'Urdu'])
 
     if uploaded_file and number and level and language:
         data = read_input_file(uploaded_file)
@@ -69,9 +84,10 @@ try:
 
         # Word file download
         word_placeholder = st.empty()
+        word_file = create_word_file(response, language)
         word_download = word_placeholder.download_button(
             label="Download Word File",
-            data=response,
+            data=word_file.getvalue(),
             file_name="mcqs.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         )
@@ -87,6 +103,29 @@ try:
 
 except NameError:
     pass
+
+def create_word_file(response, language):
+    # Create a new Word document
+    doc = Document()
+
+    # Set the default font for the document
+    font_name = LANGUAGE_FONTS.get(language, 'Arial')
+    doc.styles['Normal'].font.name = font_name
+
+    # Split the response into lines
+    lines = response.split('\n')
+
+    # Add each line to the document
+    for line in lines:
+        doc.add_paragraph(line)
+        doc.add_paragraph(WD_BREAK.LINE_BREAK)
+
+    # Save the document to a BytesIO object
+    file_obj = io.BytesIO()
+    doc.save(file_obj)
+    file_obj.seek(0)
+
+    return file_obj
 
 def create_pdf(response):
     pdf = pdfkit.from_string(response, False)
