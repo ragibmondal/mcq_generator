@@ -5,5 +5,6 @@ streamlit
 python-dotenv
 pdfplumber
 pdfkit
+wkhtmltopdf
 ipykernel
 -e
