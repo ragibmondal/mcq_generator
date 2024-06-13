@@ -5,5 +5,3 @@ streamlit
 python-dotenv
 pdfplumber
 ipykernel
-
--e 
