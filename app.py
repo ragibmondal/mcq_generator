@@ -23,7 +23,7 @@ def create_pdf(response):
     pdf.add_page()
     pdf.set_font("Arial", size=12)
     pdf.multi_cell(0, 10, txt=response)
-    pdf_bytes = pdf.output(dest="S").encode("utf-8")
+    pdf_bytes = pdf.output(dest="S").encode("utf-8")  # Change from "latin-1" to "utf-8"
     return pdf_bytes
 
 # Initialize gen_button to False
